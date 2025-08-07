@@ -22,33 +22,20 @@ def Players_Cards(Cards):
     return p1_card,p2_card
 
 def Find_Suits(dc): 
-    CardSpecies=[0]*4                          #  Create a list with 4 zero elements [0,0,0,0]
+   def Find_Suits(dc):
+    CardSpecies = [0] * 4  # ♣, ♥, ♦, ♠
+
     for check_card in dc:
-        if '\u2663' in check_card:             # If I have this specific kind ('\u2663') through the Dealer Cards  increase by 1 the variable CardSpecies[i]
-            CardSpecies[0]=CardSpecies[0]+1
-        elif '\u2665' in check_card:
-            CardSpecies[1]=CardSpecies[1]+1
-        elif '\u2666' in check_card:
-            CardSpecies[2]=CardSpecies[2]+1
-        elif '\u2660' in check_card:
-            CardSpecies[3]=CardSpecies[3]+1
-    
-    if (5 in CardSpecies):                    # If there is the element 5 in the list it means that I have 5 same kinds
-        print("I have got 5 same kind \n") 
-        all_same_kind=True
-    else: 
-        print("I have't got 5 same kind\n") 
-        all_same_kind=False
+        if '\u2663' in check_card:  # ♣
+            CardSpecies[0] += 1
+        elif '\u2665' in check_card:  # ♥
+            CardSpecies[1] += 1
+        elif '\u2666' in check_card:  # ♦
+            CardSpecies[2] += 1
+        elif '\u2660' in check_card:  # ♠
+            CardSpecies[3] += 1
 
-
-    # I just print the number of kind from the Dealer's Card 
-    print("- \u2663 ==", CardSpecies[0])    
-    print("- \u2665 ==", CardSpecies[1])
-    print("- \u2666 ==", CardSpecies[2])
-    print("- \u2660 ==", CardSpecies[3])
-    print("\n")
-
-    return all_same_kind
+    return 5 in CardSpecies
 
 def SortedCards(dc):
     card_order = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']   # figure Deck Card
@@ -113,67 +100,64 @@ def Check_Other_Rankings(dc):
         return 10
 
 def main():
+    # 🎴 Deck of Cards
+    Cards = ["A♣", "A♥", "A♦", "A♠",
+             "2♣", "2♥", "2♦", "2♠",
+             "3♣", "3♥", "3♦", "3♠",
+             "4♣", "4♥", "4♦", "4♠",
+             "5♣", "5♥", "5♦", "5♠",
+             "6♣", "6♥", "6♦", "6♠",
+             "7♣", "7♥", "7♦", "7♠",
+             "8♣", "8♥", "8♦", "8♠",
+             "9♣", "9♥", "9♦", "9♠",
+             "10♣", "10♥", "10♦", "10♠",
+             "J♣", "J♥", "J♦", "J♠",
+             "Q♣", "Q♥", "Q♦", "Q♠",
+             "K♣", "K♥", "K♦", "K♠"]
 
-# Deck of Cards 
-    Cards=["A\u2663", "A\u2665", "A\u2666", "A\u2660",
-           "2\u2663", "2\u2665", "2\u2666", "2\u2660",
-           "3\u2663", "3\u2665", "3\u2666", "3\u2660",
-           "4\u2663", "4\u2665", "4\u2666", "4\u2660",
-           "5\u2663", "5\u2665", "5\u2666", "5\u2660",
-           "6\u2663", "6\u2665", "6\u2666", "6\u2660", 
-           "7\u2663", "7\u2665", "7\u2666", "7\u2660",
-           "8\u2663", "8\u2665", "8\u2666", "8\u2660",
-           "9\u2663", "9\u2665", "9\u2666", "9\u2660",
-           "10\u2663","10\u2665","10\u2666","10\u2660",
-           "J\u2663", "J\u2665", "J\u2666", "J\u2660",
-           "Q\u2663", "Q\u2665", "Q\u2666", "Q\u2660",
-           "K\u2663", "K\u2665", "K\u2666", "K\u2660"]
-    
-# Dictionary showing the hierarchy of cards 
+    # 🏆 Card Rankings
     WinRankDict = {
-    1:  "-- ROYAL FLUSH --",
-    2:  "-- STRAIGHT FLUSH --",
-    3:  "-- FOUR OF A KIND --",
-    4:  "-- FULL HOUSE --",
-    5:  "-- FLUSH --",
-    6:  "-- STRAIGHT --",
-    7:  "-- THREE OF A KIND --",
-    8:  "-- TWO PAIR --",
-    9:  "-- PAIR --",
-    10: "-- HIGH CARD --"
-}
-    
+        1:  "-- ROYAL FLUSH --",
+        2:  "-- STRAIGHT FLUSH --",
+        3:  "-- FOUR OF A KIND --",
+        4:  "-- FULL HOUSE --",
+        5:  "-- FLUSH --",
+        6:  "-- STRAIGHT --",
+        7:  "-- THREE OF A KIND --",
+        8:  "-- TWO PAIR --",
+        9:  "-- PAIR --",
+        10: "-- HIGH CARD --"
+    }
 
-#Player Cards Shuffling 
-    pc=Dealer_Cards(Cards) 
-    pc=['10♠', '10♣', '10♥', 'K♦', 'K♠']
-    if (Find_Suits(pc)):
-        WinRankPlayer=CheckFlush(pc)
+    # 🧠 Συνάρτηση αξιολόγησης χεριού
+    def evaluate_hand(name, hand):
+        print(f"\n{name} HAND: {hand}")
+        if Find_Suits(hand):
+            rank = CheckFlush(hand)
+        else:
+            rank = Check_Other_Rankings(hand)
+        print(f"{name} RANK: {WinRankDict[rank]}")
+        return rank
+
+    # 🎮 Παίκτης
+    player_hand = ['10♠', '10♣', '10♥', 'K♦', 'K♠']
+    player_rank = evaluate_hand("PLAYER", player_hand)
+
+    # 🧑‍⚖️ Dealer
+    dealer_hand = ['Q♠', '10♠', 'J♠', 'K♠', 'A♠']
+    dealer_rank = evaluate_hand("DEALER", dealer_hand)
+
+    # 🥇 Ανακοίνωση νικητή
+    if dealer_rank < player_rank:
+        print(f"\n🏆 DEALER wins with {WinRankDict[dealer_rank]}")
+    elif dealer_rank > player_rank:
+        print(f"\n🏆 PLAYER wins with {WinRankDict[player_rank]}")
     else:
-        WinRankPlayer=Check_Other_Rankings(pc)
-    print(WinRankDict[WinRankPlayer])
+        print(f"\n🤝 It's a tie with {WinRankDict[player_rank]}")
 
-
-
-#Dealer Card Shuffling
-    dc=Dealer_Cards(Cards) 
-    dc=['Q♠', '10♠', 'J♠', 'K♠', 'A♠']
-    if (Find_Suits(dc)):
-        WinRankDealer=CheckFlush(dc)
-    else:
-        WinRankDealer=Check_Other_Rankings(dc)
-    print(WinRankDict[WinRankDealer])
-
-
-#Checking Card Ranking 
-    if (WinRankDealer < WinRankPlayer):
-        print("The Dealer wins with",WinRankDict[WinRankDealer] )
-    else:
-        print("The Player wins",WinRankDict[WinRankPlayer])
-
-
-if __name__=='__main__':
+if __name__ == '__main__':
     main()
+
 
 
 
